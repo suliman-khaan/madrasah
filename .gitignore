@@ -1,0 +1,10 @@
+# Node.js v4 and later cache directory (https://nodejs.org/api/modules.html#modules_caching)
+node_modules/
+
+# .env files contain environment variables that can be loaded into process.env by tools like dotenv
+.env
+.env.test
+src/config/
+
+# .vscode folder contains Visual Studio Code project files
+.vscode
