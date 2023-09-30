@@ -29,3 +29,29 @@ Before running this application, make sure you have the following software insta
 
    ```bash
    git clone https://github.com/khan-suliman/madrasah.git
+
+   ```
+
+2. Navigate to the project directory
+
+   ```bash
+   cd madrasah
+   ```
+
+3. Install dependencies
+
+   ```bash
+   npm install
+   ```
+   
+4. Create a .env file under src/config/ and set the port
+
+   ```env
+   PORT=3000
+   ```
+
+5. Run the application
+
+   ```bash
+   npm start
+   ```
