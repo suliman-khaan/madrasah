@@ -1,7 +1,7 @@
 const express = require("express");
 const hbs = require("hbs");
 const path = require("path");
-require("dotenv").config();
+require("dotenv").config({ path: path.resolve(__dirname, 'src/config', '.env') });
 
 const app = express();
 const port = process.env.PORT || 3000;
