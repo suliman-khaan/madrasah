@@ -47,7 +47,7 @@ Before running this application, make sure you have the following software insta
 4. Create a .env file under src/config/ and set the port
 
    ```env
-   PORT=3000
+   PORT=3001
    ```
 
 5. Run the application
