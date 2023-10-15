@@ -45,8 +45,8 @@ module.exports = {
     }
   },
   async doEdit(req, res) {
-    const id = req.body.id;
     try {
+      const id = req.body.id;
       const userObject = req.body;
       delete req.body.id;
       await User.findByIdAndUpdate(id, userObject);

@@ -1,0 +1,153 @@
+{{>header}}
+
+
+{{>navbar}}
+
+{{>sidebar}}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+	<div class="container-full">
+		<!-- Content Header (Page header) -->
+		<div class="content-header">
+			<div class="d-flex align-items-center">
+				<div class="me-auto">
+					<h3 class="page-title">{{#if user}} ترمیم استاد{{else}} اندراج استاد{{/if}}</h3>
+				</div>
+
+			</div>
+		</div>
+
+		<!-- Main content -->
+		<section class="content">
+			<div class="row">
+				<div class="col-lg-6 col-12">
+					<div class="box">
+						<div class="box-header with-border">
+							<h4 class="box-title">استاد {{#if teacher}} ترمیم{{else}} شامل{{/if}} کرنے کا فارم</h4>
+						</div>
+						<!-- /.box-header -->
+						<form class="form" method="post">
+							{{#if teacher}}
+							<input type="hidden" name="id" value="{{teacher.id}}" />
+							{{/if}}
+							<div class="box-body">
+								<h4 class="box-title text-info mb-0"><i class="ti-user me-15"></i> ذاتی معلومات</h4>
+								<hr class="my-15">
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="form-label">نام</label>
+											<input type="text" name="name" value="{{teacher.name}}" class="form-control"
+												required>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="form-label">ای میل(Email)</label>
+											<input type="email" name="email" value="{{teacher.email}}" class="form-control email">
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="form-label">موبائل نمبر</label>
+											<input type="text" name="phone" value="{{teacher.phone}}"
+												class="form-control mobile" required>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="form-label">پتہ</label>
+											<input type="text" name="address" value="{{teacher.address}}"
+												class="form-control" required>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group row">
+											<label for="dob" class="form-label">تاریخ پیدائش</label>
+											<input class="form-control eng" name="dob" value="{{inputDate teacher.dob}}"
+												type="date" id="dob" required>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="form-label">جنس</label>
+											<div class="c-inputs-stacked">
+												<input {{#ifEqual teacher.gender "مرد" }}checked{{/ifEqual}} name="gender"
+													type="radio" id="male" value="مرد" required>
+												<label for="male" class="me-30">مرد</label>
+												<input {{#ifEqual teacher.gender "عورت" }}checked{{/ifEqual}} name="gender"
+													type="radio" id="female" value="عورت" required>
+												<label for="female" class="me-30">عورت</label>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<h4 class="box-title text-info mb-0 mt-20"><i class="ti-save me-15"></i> دیگر معلومات
+								</h4>
+								<hr class="my-15">
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="form-label">عہدہ</label>
+											<select class="form-select" name="designation" required>
+												<option {{#ifEqual teacher.designation "مہتمم" }}selected{{/ifEqual}}
+													value="مہتمم">مہتمم</option>
+												<option {{#ifEqual teacher.designation "منطظم" }}selected{{/ifEqual}}
+													value="منطظم">منطظم</option>
+												<option {{#ifEqual teacher.designation "معلم" }}selected{{/ifEqual}}
+													value="معلم">معلم </option>
+												<option {{#ifEqual teacher.designation "قاری" }}selected{{/ifEqual}}
+													value="قاری">قاری</option>
+											</select>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="form-label">تعلیم</label>
+											<select class="form-select eng" name="education" required>
+												<option {{#ifEqual teacher.education "none" }}selected{{/ifEqual}}
+													value="none">None</option>
+												<option {{#ifEqual teacher.education "metric" }}selected{{/ifEqual}}
+													value="metric">Metric</option>
+												<option {{#ifEqual teacher.education "intermediate" }}selected{{/ifEqual}}
+													value="intermediate">FA/FSc</option>
+												<option {{#ifEqual teacher.education "bachelor" }}selected{{/ifEqual}}
+													value="bachelor">BA/BS/BSc</option>
+												<option {{#ifEqual teacher.education "master" }}selected{{/ifEqual}}
+													value="master">MA/MS/MSc/MPhil</option>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- /.box-body -->
+							<div class="box-footer">
+								<button type="submit" class="btn btn-primary">
+									<i class="ti-save-alt"></i>{{#if teacher}} ترمیم کریں{{else}} جمع کریں{{/if}}
+								</button>
+								<button type="reset" class="btn btn-warning me-1">
+									<i class="ti-trash"></i> صاف کریں
+								</button>
+							</div>
+						</form>
+					</div>
+					<!-- /.box -->
+				</div>
+			</div>
+			<!-- /.row -->
+
+		</section>
+		<!-- /.content -->
+	</div>
+</div>
+
+{{>footer}}
+<script src="/vendor_components/formatter/formatter.js"></script>
+<script src="/vendor_components/formatter/jquery.formatter.js"></script>
+<script src="/js/pages/students.js"></script>

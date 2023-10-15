@@ -13,20 +13,19 @@ const userSchema = new mongoose.Schema(
     },
     fatherName: {
       type: String,
-      required: true,
     },
     nic: {
       type: String,
-      required: true,
-      // unique: true,
     },
     fatherNic: {
       type: String,
-      required: true,
     },
     phone: {
       type: String,
       required: true,
+    },
+    email: {
+      type: String,
     },
     dob: {
       type: Date,
@@ -34,7 +33,6 @@ const userSchema = new mongoose.Schema(
     },
     fatherPhone: {
       type: String,
-      required: true,
     },
     address: {
       type: String,
@@ -50,19 +48,21 @@ const userSchema = new mongoose.Schema(
       enum: ["student", "teacher", "admin"],
       required: true,
     },
+    designation: {
+      type: String,
+    },
     education: {
       type: String,
       required: true,
     },
     admission: {
       type: String,
-      required: true,
     },
-    status:{
-      type :String ,
+    status: {
+      type: String,
       required: true,
-      default: 'publish'
-    }
+      default: "publish",
+    },
     // Add more fields as needed
   },
   {
