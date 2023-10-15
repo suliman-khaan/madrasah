@@ -91,6 +91,16 @@ Waves
 @import url(../icons/iconsmind/style.css);
 @import url(../icons/icomoon/style.css);
 @import url(../vendor_components/animate/animate.css);
+
+@font-face {
+  font-family: 'nastaleeq';
+  src: url('../fonts/JameelNooriNastaleeq.ttf');
+}
+@font-face {
+  font-family: 'urdu1';
+  src: url('../fonts/urdu1.ttf');
+}
+
 html {
   height: 100%;
   font-size: 14px;
@@ -123,11 +133,17 @@ body {
   font-size: 1rem;
   font-style: normal;
   font-weight: 400;
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: "nastaleeq", sans-serif;
   line-height: 1.5;
   background-color: #fafbfd;
 }
+.eng{
+  font-family: "IBM Plex Sans", sans-serif;
+}
 
+.jq-toast-wrap .jq-toast-single{
+  font-family: "urdu1", sans-serif;
+}
 /*---basic---*/
 a {
   color: #2f579a;
@@ -152,7 +168,7 @@ h6,
 .h4,
 .h5,
 .h6 {
-  font-family: "Rubik", sans-serif;
+  font-family: "urdu1", sans-serif;
   font-weight: 400;
   line-height: 1.2;
 }
@@ -27960,11 +27976,12 @@ body .main-header .navbar .nav > li.search-box > a:focus {
   height: 100vh;
   z-index: 999999;
   overflow: visible;
-  background: #fff url("../../images/preloaders/1.gif") no-repeat center center;
+  background: #fff url("../images/preloaders/1.gif") no-repeat center center;
 }
 
 /*sidebar*/
 .main-sidebar {
+  font-family: 'urdu1',sans-serif;
   position: absolute;
   top: 0;
   left: 0;

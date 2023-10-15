@@ -1,0 +1,107 @@
+{{>header}}
+
+
+{{>navbar}}
+
+{{>sidebar}}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+	<div class="container-full">
+		<!-- Content Header (Page header) -->
+		<div class="content-header">
+			<div class="d-flex align-items-center">
+				<div class="me-auto">
+					<h3 class="page-title"> طلباء علم رکارڈ</h3>
+				</div>
+
+			</div>
+		</div>
+
+		<!-- Main content -->
+		<section class="content">
+			<div class="row">
+				<div class="box">
+					<!-- /.box-header -->
+					<div class="box-body">
+						<div class="table-responsive">
+							<table id="example"
+								class="table table-bordered table-hover display nowrap margin-top-10 w-p100">
+								<thead>
+									<tr>
+										<th>رول نمبر</th>
+										<th>نام</th>
+										<th>والد کا نام</th>
+										<th>کلاس</th>
+										<th>موبائل نمبر</th>
+										<th>پتہ</th>
+										<th>کارروائی</th>
+									</tr>
+								</thead>
+								<tbody>
+									{{#each students}}
+									<tr>
+										<td>{{this.rollNumber}}</td>
+										<td>{{this.name}}</td>
+										<td>{{this.fatherName}}</td>
+										<td>{{this.admission}}</td>
+										<td>{{this.phone}}</td>
+										<td>{{this.address}}</td>
+										<td>
+											<a class="btn btn-success px-2 py-1 me-1"
+												href="/students/edit?id={{this._id}}"><i
+													class="mdi mdi-account-edit"></i></a>
+											<button class="btn btn-danger px-2 py-1" data-id="{{this._id}}" data-bs-toggle="modal" data-bs-target="#delete"><i
+													class="mdi mdi-delete"></i></button>
+										</td>
+									</tr>
+									{{/each}}
+								</tbody>
+							</table>
+
+						</div>
+					</div>
+					<!-- /.box-body -->
+				</div>
+			</div>
+			<!-- /.row -->
+		</section>
+		<!-- /.content -->
+	</div>
+</div>
+
+<!-- modal Area -->
+<div class="modal fade" id="delete">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">انتباہ</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p class="fs-16">کیا آپ واقعی طالب علم کو حذف کرنا چاہتے ہیں؟</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal">نہیں</button>
+				<a href="#" id="yes" type="button" class="btn btn-primary float-end">ہاں</a>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+{{>footer}}
+<script src="/vendor_components/datatable/datatables.min.js"></script>
+
+<script src="/js/pages/data-table.js"></script>
+<script>
+	$(function () {
+		$("#delete").on("show.bs.modal", function (e) {
+			console.log(e.relatedTarget)
+			let id = $(e.relatedTarget).data('id')
+			$(this).find('#yes').prop('href', "/students/delete?id="+id)
+		});
+	})
+</script>

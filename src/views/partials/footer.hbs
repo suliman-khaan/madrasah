@@ -1,14 +1,43 @@
-<!-- Vendor JS -->
-<script src="js/vendors.min.js"></script>
-<script src="js/pages/chat-popup.js"></script>
-<script src="icons/feather-icons/feather.min.js"></script>
+<!-- /.content-wrapper -->
+	<footer class="main-footer">
+		&copy; 2023 <a href="/">مدرسہ دینیہ رحمانیہ اسلام پور سوات</a>. جملہ حقوق محفوظ ہیں.
+	</footer>
 
-<script src="vendor_components/apexcharts-bundle/dist/apexcharts.js"></script>
+
+</div>
+<!-- ./wrapper -->
+
+<!-- Vendor JS -->
+<script src="/js/vendors.min.js"></script>
+<script src="/js/pages/chat-popup.js"></script>
+<script src="/icons/feather-icons/feather.min.js"></script>
+
 
 <!-- App -->
-<script src="js/template.js"></script>
-<script src="js/pages/dashboard2.js"></script>
-
+<script src="/js/template.js"></script>
+<script src="/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js"></script>
+<script>
+	$(document).ready(function () {
+		{{#if success}}
+		$.toast({
+			text: `{{success}}`,
+			position: 'top-left',
+			icon: 'success',
+			hideAfter: 10000,
+			stack: 6
+		});
+		{{/if}}
+		{{#if error}}
+		$.toast({
+			text: `{{error}}`,
+			position: 'top-left',
+			icon: 'error',
+			hideAfter: 10000,
+			stack: 6
+		});
+		{{/if}}
+	});
+</script>
 </body>
 
 </html>
