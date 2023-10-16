@@ -1,9 +1,9 @@
-const Class = require("../../model/Class");
+const ClassModel = require("../../model/class");
 
 module.exports = {
   async all(req, res) {
     try {
-      const classes = await Class.find({status: "publish" });
+      const classes = await ClassModel.find({status: "publish" });
       res.render("class/all", { classes });
     } catch (error) {
       req.flash("error", "صارفین دیکھتے وقت خرابی:۔ " + error.message);
@@ -15,7 +15,7 @@ module.exports = {
   },
   async doAdd(req, res) {
     try {
-      const newClass = new Class(req.body);
+      const newClass = new ClassModel(req.body);
       await newClass.save();
 
       // If the Class is successfully added, redirect to the dashboard
@@ -33,7 +33,7 @@ module.exports = {
         req.flash("error", "کلاس کو ترمیم کرنے کے لئے ID ضروری ہے");
         return res.redirect("/class");
       }
-      const classes = await Class.findOne({ _id: id, status: "publish" });
+      const classes = await ClassModel.findOne({ _id: id, status: "publish" });
       if (!classes) {
         req.flash("error", "کلاس نہیں مل سکا");
         return res.redirect("/class");
@@ -53,7 +53,7 @@ module.exports = {
       }
       const ClassObject = req.body;
       delete req.body.id;
-      await Class.findByIdAndUpdate(id, ClassObject);
+      await ClassModel.findByIdAndUpdate(id, ClassObject);
 
       // If the Class is successfully added, redirect to the dashboard
       req.flash("success", "کلاس کامیابی سے ترمیم کیا گیا");
@@ -70,7 +70,7 @@ module.exports = {
         req.flash("error", "کلاس کو حذف کرنے کے لئے ID ضروری ہے");
         return res.redirect("/class");
       }
-      await Class.findOneAndUpdate(
+      await ClassModel.findOneAndUpdate(
         { _id: id, status: "publish" },
         { status: "delete" }
       );

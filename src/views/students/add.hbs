@@ -129,11 +129,15 @@
 											<label class="form-label">داخلہ کلاس</label>
 											<select class="form-select" name="admission"
 												required>
-												<option {{#ifEqual user.admission "درجہ-1"}}selected{{/ifEqual}} value="درجہ-1">درجہ 1</option>
+												<option value="none">None</option>
+												{{#each classes}}
+												<option value="{{this.id}}" {{#ifEqual ../user.admission this.id}}selected{{/ifEqual}}>{{this.name}}</option>
+												{{/each}}
+												{{!-- <option {{#ifEqual user.admission "درجہ-1"}}selected{{/ifEqual}} value="درجہ-1">درجہ 1</option>
 												<option {{#ifEqual user.admission ""}}selected{{/ifEqual}} value="درجہ-2">درجہ 2</option>
 												<option {{#ifEqual user.admission ""}}selected{{/ifEqual}} value="درجہ-3">درجہ 3</option>
 												<option {{#ifEqual user.admission ""}}selected{{/ifEqual}} value="درجہ-4">درجہ 4</option>
-												<option {{#ifEqual user.admission ""}}selected{{/ifEqual}} value="درجہ-5">درجہ 5</option>
+												<option {{#ifEqual user.admission ""}}selected{{/ifEqual}} value="درجہ-5">درجہ 5</option> --}}
 											</select>
 										</div>
 									</div>

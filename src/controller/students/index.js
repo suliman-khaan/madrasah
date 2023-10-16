@@ -1,17 +1,24 @@
+const ClassModel = require("../../model/class");
 const User = require("../../model/user");
 
 module.exports = {
   async all(req, res) {
     try {
-      const students = await User.find({ role: "student", status: "publish" });
+      const students = await User.find({ role: "student", status: "publish" }).populate('admission');
       res.render("students/all", { students });
     } catch (error) {
-      req.flash("error", "صارفین دیکھتے وقت خرابی:۔ " + error.message);
+      req.flash("error", "طالب علم دیکھتے وقت خرابی:۔ " + error.message);
       res.redirect("/");
     }
   },
-  add(req, res) {
-    res.render("students/add");
+  async add(req, res) {
+    try {
+      const classes = await ClassModel.find({status:'publish'});
+      res.render("students/add",{classes});
+    } catch (error) {
+      req.flash("error", "طالب علم شامل کرتے وقت خرابی " + error.message);
+      res.redirect("/");
+    }
   },
   async doAdd(req, res) {
     try {
@@ -33,12 +40,13 @@ module.exports = {
         req.flash("error", "طالب علم کو ترمیم کرنے کے لئے ID ضروری ہے");
         return res.redirect("/students");
       }
+      const classes = await ClassModel.find({status:'publish'});
       const user = await User.findOne({ _id: id, status: "publish" });
       if (!user) {
         req.flash("error", "طالب علم نہیں مل سکا");
         return res.redirect("/students");
       }
-      res.render("students/add", { user });
+      res.render("students/add", { user,classes });
     } catch (error) {
       req.flash("error", "طالب علم میں تبدیلی کرتے وقت خرابی " + error.message);
       res.redirect("/students");

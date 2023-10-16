@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const classSchema = new mongoose.Schema({
   name: {
@@ -7,13 +7,15 @@ const classSchema = new mongoose.Schema({
   },
   section: {
     type: String,
-    enum: ['لڑکوں', 'لڑکیوں'],
+    enum: ["لڑکوں", "لڑکیوں"],
     required: true,
   },
-  status:{
+  status: {
     type: String,
-    default: 'publish'
-  }
+    default: "publish",
+  },
 });
 
-module.exports = mongoose.model('Class', classSchema);
+const ClassModel = mongoose.model("Class", classSchema);
+
+module.exports = ClassModel;
