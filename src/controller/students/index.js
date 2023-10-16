@@ -47,6 +47,10 @@ module.exports = {
   async doEdit(req, res) {
     try {
       const id = req.body.id;
+      if (!id) {
+        req.flash("error", "طالب علم کو ترمیم کرنے کے لئے ID ضروری ہے");
+        return res.redirect("/students");
+      }
       const userObject = req.body;
       delete req.body.id;
       await User.findByIdAndUpdate(id, userObject);
@@ -66,7 +70,6 @@ module.exports = {
         req.flash("error", "طالب علم کو حذف کرنے کے لئے ID ضروری ہے");
         return res.redirect("/students");
       }
-      console.log(id);
       await User.findOneAndUpdate(
         { _id: id, status: "publish" },
         { status: "delete" }

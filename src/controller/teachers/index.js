@@ -70,7 +70,6 @@ module.exports = {
         req.flash("error", "استاد کو حذف کرنے کے لئے ID ضروری ہے");
         return res.redirect("/teachers");
       }
-      console.log(id);
       await User.findOneAndUpdate(
         { _id: id, status: "publish" },
         { status: "delete" }

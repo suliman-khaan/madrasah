@@ -144,6 +144,9 @@ body {
 .jq-toast-wrap .jq-toast-single{
   font-family: "urdu1", sans-serif;
 }
+thead{
+  font-family: "urdu1", sans-serif;
+}
 /*---basic---*/
 a {
   color: #2f579a;
