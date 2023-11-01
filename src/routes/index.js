@@ -3,10 +3,12 @@ const { dashboard } = require("../controller");
 const router = express.Router();
 const studentsRoutes = require("./students");
 const teachersRoutes = require("./teachers");
+const feeRoutes = require("./fee");
 
 router.get("/", dashboard);
 router.use("/students", studentsRoutes);
 router.use('/teachers', teachersRoutes);
-router.get('*',(req,res)=>res.render('utils/404'))
+router.use('/fee', feeRoutes);
+router.get('*', (req, res) => res.render('utils/404'))
 
 module.exports = router;
