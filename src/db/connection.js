@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-const dbUrl = 'mongodb://localhost/madrasa';
-
+const dbUrl = process.env.DB_URI;
+console.log('db url', dbUrl);
 // Connect to the MongoDB database
 mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 
