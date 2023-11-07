@@ -56,7 +56,8 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     admission: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Class",
     },
     status: {
       type: String,
