@@ -1,10 +1,12 @@
 const ClassModel = require("../../model/class");
-const User = require("../../model/user");
+const Student = require("../../model/student");
 
 module.exports = {
   async all(req, res) {
     try {
-      const students = await User.find({ role: "student", status: "publish" }).populate('admission');
+      const students = await Student.find({ status: "publish" }).populate(
+        "admission"
+      );
       res.render("students/all", { students });
     } catch (error) {
       req.flash("error", "طالب علم دیکھتے وقت خرابی:۔ " + error.message);
@@ -13,8 +15,8 @@ module.exports = {
   },
   async add(req, res) {
     try {
-      const classes = await ClassModel.find({status:'publish'});
-      res.render("students/add",{classes});
+      const classes = await ClassModel.find({ status: "publish" });
+      res.render("students/add", { classes });
     } catch (error) {
       req.flash("error", "طالب علم شامل کرتے وقت خرابی " + error.message);
       res.redirect("/");
@@ -22,10 +24,10 @@ module.exports = {
   },
   async doAdd(req, res) {
     try {
-      const newUser = new User({ ...req.body, role: "student" });
-      await newUser.save();
+      const newStudent = new Student({ ...req.body });
+      await newStudent.save();
 
-      // If the user is successfully added, redirect to the dashboard
+      // If the student is successfully added, redirect to the dashboard
       req.flash("success", "طالب علم کامیابی سے شامل کیا گیا");
       res.redirect("/");
     } catch (error) {
@@ -40,13 +42,13 @@ module.exports = {
         req.flash("error", "طالب علم کو ترمیم کرنے کے لئے ID ضروری ہے");
         return res.redirect("/students");
       }
-      const classes = await ClassModel.find({status:'publish'});
-      const user = await User.findOne({ _id: id, status: "publish" });
-      if (!user) {
+      const classes = await ClassModel.find({ status: "publish" });
+      const student = await Student.findOne({ _id: id, status: "publish" });
+      if (!student) {
         req.flash("error", "طالب علم نہیں مل سکا");
         return res.redirect("/students");
       }
-      res.render("students/add", { user,classes });
+      res.render("students/add", { student, classes });
     } catch (error) {
       req.flash("error", "طالب علم میں تبدیلی کرتے وقت خرابی " + error.message);
       res.redirect("/students");
@@ -59,11 +61,11 @@ module.exports = {
         req.flash("error", "طالب علم کو ترمیم کرنے کے لئے ID ضروری ہے");
         return res.redirect("/students");
       }
-      const userObject = req.body;
+      const studentObject = req.body;
       delete req.body.id;
-      await User.findByIdAndUpdate(id, userObject);
+      await Student.findByIdAndUpdate(id, studentObject);
 
-      // If the user is successfully added, redirect to the dashboard
+      // If the student is successfully added, redirect to the dashboard
       req.flash("success", "طالب علم کامیابی سے ترمیم کیا گیا");
       res.redirect("/students");
     } catch (error) {
@@ -78,7 +80,7 @@ module.exports = {
         req.flash("error", "طالب علم کو حذف کرنے کے لئے ID ضروری ہے");
         return res.redirect("/students");
       }
-      await User.findOneAndUpdate(
+      await Student.findOneAndUpdate(
         { _id: id, status: "publish" },
         { status: "delete" }
       );

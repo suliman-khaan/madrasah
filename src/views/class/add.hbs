@@ -12,7 +12,7 @@
 		<div class="content-header">
 			<div class="d-flex align-items-center">
 				<div class="me-auto">
-					<h3 class="page-title">{{#if user}} ترمیم کلاس{{else}} اندراج کلاس{{/if}}</h3>
+					<h3 class="page-title">{{#if classes}} ترمیم کلاس{{else}} اندراج کلاس{{/if}}</h3>
 				</div>
 
 			</div>
@@ -25,6 +25,8 @@
 					<div class="box">
 						<div class="box-header with-border">
 							<h4 class="box-title">کلاس {{#if classes}} ترمیم{{else}} شامل{{/if}} کرنے کا فارم</h4>
+							{{#unless subjects}}<span class="bg-danger px-1 float-end rounded">براہ کرم نئی کلاس بنانے
+								کے لئے مضامین شامل کریں</span>{{/unless}}
 						</div>
 						<!-- /.box-header -->
 						<form class="form" method="post">
@@ -42,13 +44,29 @@
 									</div>
 									<div class="col-md-12">
 										<div class="form-group">
+											<label class="form-label">مضامین</label>
+											<select required class="form-control select2" name="subjects"
+												multiple="multiple"
+												data-placeholder="اس کلاس میں شامل کرنے کے لئے مضمونات منتخب کریں"
+												style="width: 100%;">
+												{{#each subjects}}
+												<option value="{{this.id}}" {{#ifEqual classes.section "لڑکوں"
+													}}selected{{/ifEqual}}>{{this.name}}</option>
+												{{/each}}
+											</select>
+											<span class="form-text text-muted">نیا مضمون شامل کرنے کے لئے <a
+													href="/subject/add" class="text-primary"> یہاں کلک</a> کریں</span>
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="form-group">
 											<label class="form-label">سکشن</label>
 											<div class="c-inputs-stacked">
-												<input {{#ifEqual classes.section "لڑکوں" }}checked{{/ifEqual}} name="section"
-													type="radio" id="male" value="لڑکوں" required>
+												<input {{#ifEqual classes.section "لڑکوں" }}checked{{/ifEqual}}
+													name="section" type="radio" id="male" value="لڑکوں" required>
 												<label for="male" class="me-30">لڑکوں</label>
-												<input {{#ifEqual classes.section "لڑکیوں" }}checked{{/ifEqual}} name="section"
-													type="radio" id="female" value="لڑکیوں" required>
+												<input {{#ifEqual classes.section "لڑکیوں" }}checked{{/ifEqual}}
+													name="section" type="radio" id="female" value="لڑکیوں" required>
 												<label for="female" class="me-30">لڑکیوں</label>
 											</div>
 										</div>
@@ -57,7 +75,7 @@
 							</div>
 							<!-- /.box-body -->
 							<div class="box-footer">
-								<button type="submit" class="btn btn-primary">
+								<button type="submit" class="btn btn-primary" {{#unless subjects}}disabled{{/unless}}>
 									<i class="ti-save-alt"></i>{{#if classes}} ترمیم کریں{{else}} جمع کریں{{/if}}
 								</button>
 								<button type="reset" class="btn btn-warning me-1">
@@ -79,4 +97,15 @@
 {{>footer}}
 <script src="/vendor_components/formatter/formatter.js"></script>
 <script src="/vendor_components/formatter/jquery.formatter.js"></script>
+<script src="/vendor_components/select2/dist/js/select2.full.js"></script>
+<script>
+	let selectedSubjects = `{{{classes.subjects}}}`;
+	selectedSubjects = selectedSubjects ? selectedSubjects.split(',') : []
+	$(function () {
+		//Initialize Select2 Elements
+		$(".select2").select2();
+		// Set default selections
+		if (selectedSubjects) $(".select2").val(selectedSubjects).trigger("change");
+	})
+</script>
 <script src="/js/pages/students.js"></script>

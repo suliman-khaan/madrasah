@@ -14,7 +14,7 @@ router.use("/teachers", teachersRoutes);
 router.use("/class", classRoutes);
 router.use("/fee", feeRoutes);
 router.use("/subject", subjectRoutes);
-router.use("/mark", markRoutes);
+router.use("/marks", markRoutes);
 router.get("*", (req, res) => res.render("utils/404"));
 
 module.exports = router;

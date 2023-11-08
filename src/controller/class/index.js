@@ -1,20 +1,28 @@
 const ClassModel = require("../../model/class");
+const Subject = require("../../model/subject");
 
 module.exports = {
   async all(req, res) {
     try {
-      const classes = await ClassModel.find({status: "publish" });
+      const classes = await ClassModel.find({status: "publish" }).populate('subjects');
       res.render("class/all", { classes });
     } catch (error) {
       req.flash("error", "صارفین دیکھتے وقت خرابی:۔ " + error.message);
       res.redirect("/");
     }
   },
-  add(req, res) {
-    res.render("class/add");
+  async add(req, res) {
+    try {
+      const subjects = await Subject.find({status:'publish'})
+      res.render("class/add",{subjects});
+    } catch (error) {
+      req.flash("error", "کلاس شامل کرتے وقت خرابی " + error.message);
+      res.redirect("/");
+    }
   },
   async doAdd(req, res) {
     try {
+      console.log(req.body)
       const newClass = new ClassModel(req.body);
       await newClass.save();
 
@@ -38,7 +46,9 @@ module.exports = {
         req.flash("error", "کلاس نہیں مل سکا");
         return res.redirect("/class");
       }
-      res.render("class/add", { classes });
+
+      const subjects = await Subject.find({status:'publish'})
+      res.render("class/add", { classes,subjects });
     } catch (error) {
       req.flash("error", "کلاس میں تبدیلی کرتے وقت خرابی " + error.message);
       res.redirect("/class");
