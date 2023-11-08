@@ -43,11 +43,6 @@ const userSchema = new mongoose.Schema(
       enum: ["عورت", "مرد"],
       required: true,
     },
-    role: {
-      type: String,
-      enum: ["student", "teacher", "admin"],
-      required: true,
-    },
     designation: {
       type: String,
     },
@@ -55,19 +50,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    admission: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Class",
-    },
     status: {
       type: String,
       required: true,
       default: "publish",
     },
-    // Add more fields as needed
   },
   {
     timestamp: true,
+    discriminatorKey:'role'
   }
 );
 

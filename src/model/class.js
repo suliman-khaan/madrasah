@@ -10,6 +10,12 @@ const classSchema = new mongoose.Schema({
     enum: ["لڑکوں", "لڑکیوں"],
     required: true,
   },
+  subjects: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Subject",
+    },
+  ],
   status: {
     type: String,
     default: "publish",

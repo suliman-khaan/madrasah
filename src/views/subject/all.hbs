@@ -12,7 +12,7 @@
 		<div class="content-header">
 			<div class="d-flex align-items-center">
 				<div class="me-auto">
-					<h3 class="page-title"> کلاس رکارڈ</h3>
+					<h3 class="page-title">مضامین</h3>
 				</div>
 
 			</div>
@@ -29,25 +29,26 @@
 								class="table table-bordered table-hover display nowrap margin-top-10 w-p100">
 								<thead>
 									<tr>
-										<th>سیریل نمبر</th>
-										<th>کلاس</th>
-										<th>سکشن</th>
-										<th>مضامین</th>
-										<th>کارروائی</th>
+										<th width="100px">سیریل نمبر</th>
+										<th>مضمون</th>
+										<th>امتحانی نمبر</th>
+										<th>امتحانی پاس نمبر</th>
+										<th width="100px">کارروائی</th>
 									</tr>
 								</thead>
 								<tbody>
-									{{#each classes}}
+									{{#each subjects}}
 									<tr>
-										<td width="100px">{{increment @index}}</td>
+										<td>{{increment @index}}</td>
 										<td>{{this.name}}</td>
-										<td>{{this.section}}</td>
-										<td>{{#each this.subjects}}{{this.name}}{{#unless @last}}،{{/unless}}{{/each}}</td>
+										<td>{{this.totalMarks}}</td>
+										<td>{{this.passingMarks}}</td>
 										<td>
 											<a class="btn btn-success px-2 py-1 me-1"
-												href="/class/edit?id={{this._id}}"><i
+												href="/subject/edit?id={{this._id}}"><i
 													class="mdi mdi-border-color"></i></a>
-											<button class="btn btn-danger px-2 py-1" data-id="{{this._id}}" data-bs-toggle="modal" data-bs-target="#delete"><i
+											<button class="btn btn-danger px-2 py-1" data-id="{{this._id}}"
+												data-bs-toggle="modal" data-bs-target="#delete"><i
 													class="mdi mdi-delete"></i></button>
 										</td>
 									</tr>
@@ -75,7 +76,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<p class="fs-16">کیا آپ واقعی کلاس کو حذف کرنا چاہتے ہیں؟</p>
+				<p class="fs-16">کیا آپ واقعی مضمون کو حذف کرنا چاہتے ہیں؟</p>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-danger" data-bs-dismiss="modal">نہیں</button>
@@ -97,7 +98,7 @@
 		$("#delete").on("show.bs.modal", function (e) {
 			console.log(e.relatedTarget)
 			let id = $(e.relatedTarget).data('id')
-			$(this).find('#yes').prop('href', "/class/delete?id="+id)
+			$(this).find('#yes').prop('href', "/subject/delete?id=" + id)
 		});
 	})
 </script>
