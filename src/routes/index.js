@@ -3,7 +3,6 @@ const { dashboard } = require("../controller");
 const router = express.Router();
 const studentsRoutes = require("./students");
 const teachersRoutes = require("./teachers");
-const classRoutes = require("./class");
 const feeRoutes = require("./fee");
 const subjectRoutes = require("./subject");
 const markRoutes = require("./mark");
