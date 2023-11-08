@@ -1,0 +1,102 @@
+{{>header}}
+
+
+{{>navbar}}
+
+{{>sidebar}}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+	<div class="container-full">
+		<!-- Content Header (Page header) -->
+		<div class="content-header">
+			<div class="d-flex align-items-center">
+				<div class="me-auto">
+					<h3 class="page-title">{{#if user}} ترمیم مضمون{{else}} اندراج مضمون{{/if}}</h3>
+				</div>
+
+			</div>
+		</div>
+
+		<!-- Main content -->
+		<section class="content">
+			<div class="row">
+				<div class="col-lg-6 col-12">
+					<div class="box">
+						<div class="box-header with-border">
+							<h4 class="box-title">مضمون {{#if subject}} ترمیم{{else}} شامل{{/if}} کرنے کا فارم</h4>
+						</div>
+						<!-- /.box-header -->
+						<form class="form" method="post">
+							{{#if subject}}
+							<input type="hidden" name="id" value="{{subject.id}}" />
+							{{/if}}
+							<div class="box-body">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="form-group">
+											<label class="form-label">مضمون</label>
+											<input type="text" name="name" value="{{subject.name}}" class="form-control"
+												required>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="form-label">امتحانی نمبر</label>
+											<input type="number" min="1" name="totalMarks" id="totalMark" value="{{subject.totalMarks}}"
+												class="form-control" required>
+											<span class="form-text text-muted">یہ امتحان کے لئے کل نمبر ہیں</span>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="form-label">امتحانی پاس نمبر</label>
+											<input type="number" min="1" id="passingMark" name="passingMarks" value="{{subject.passingMarks}}"
+												class="form-control" required>
+											<span class="form-text text-muted">یہ امتحان میں پاس ہونے والے نمبر ہیں</span>
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="form-group">
+											<label class="form-label">مضمون کوڈ</label>
+											<input type="text" name="code" value="{{subject.code}}"
+												class="form-control">
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- /.box-body -->
+							<div class="box-footer">
+								<button type="submit" class="btn btn-primary">
+									<i class="ti-save-alt"></i>{{#if subject}} ترمیم کریں{{else}} جمع کریں{{/if}}
+								</button>
+								<button type="reset" class="btn btn-warning me-1">
+									<i class="ti-trash"></i> صاف کریں
+								</button>
+							</div>
+						</form>
+					</div>
+					<!-- /.box -->
+				</div>
+			</div>
+			<!-- /.row -->
+
+		</section>
+		<!-- /.content -->
+	</div>
+</div>
+
+{{>footer}}
+<script src="/vendor_components/formatter/formatter.js"></script>
+<script src="/vendor_components/formatter/jquery.formatter.js"></script>
+<script src="/js/pages/students.js"></script>
+<script>
+	const totalMark = document.getElementById('totalMark')
+	const passingMark = document.getElementById('passingMark')
+	if(totalMark.value){
+		passingMark.setAttribute('max',totalMark.value)
+	}
+	totalMark.addEventListener('input',()=>{
+		passingMark.setAttribute('max',totalMark.value)
+	})
+</script>

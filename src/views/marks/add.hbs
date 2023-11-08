@@ -1,0 +1,109 @@
+{{>header}}
+
+
+{{>navbar}}
+
+{{>sidebar}}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <div class="container-full">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="d-flex align-items-center">
+                <div class="me-auto">
+                    <h3 class="page-title">{{#if user}} ترمیم نمبرات برائے {{student.name}}{{else}} اندراج نمبرات برائے
+                        {{student.name}}{{/if}}</h3>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-lg-6 col-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h4 class="box-title">مارکس شامل کرنے کا فارم</h4>
+                        </div>
+                        <!-- /.box-header -->
+                        <form class="form" method="post">
+                            <input type="hidden" name="studentId" value="{{student.id}}">
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-4 text-center">
+                                        <h6>نام: <strong class="me-2">{{student.name}}</strong></h6>
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <h6>رول نمبر: <strong
+                                                class="me-2 font-monospace">{{student.rollNumber}}</strong></h6>
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <h6>کلاس: <strong class="me-2">{{student.admission.name}}</strong></h6>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">سیشن</label>
+                                            <select class="form-select" name="session" required>
+                                                {{#each session}}
+                                                <option value="{{this}}">{{this}}</option>
+                                                {{/each}}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">امتحانات</label>
+                                            <select class="form-select" name="term" required>
+                                                <option value="چار ماہہ">چار ماہہ</option>
+                                                <option value="شیش  ماہہ">شیش ماہہ</option>
+                                                <option value="سالانہ">سالانہ</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    {{#each student.admission.subjects}}
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">{{this.name}}</label>
+                                            <input type="number" min="0" max="{{this.totalMarks}}"
+                                                name="marksObtained[{{this.id}}]" value="" class="form-control"
+                                                required>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    {{#ifEqual student.admission.subjects.length "0"}}
+                                    <span class="bg-danger py-2 w-350 rounded">
+                                        براہ کرم طالب علم کے نمبر شامل کرنے کے لئے کلاس میں مضامین شامل کریں
+                                    </span>
+                                    {{/ifEqual}}
+                                </div>
+                            </div>
+                            <!-- /.box-body -->
+                            <div class="box-footer">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="ti-save-alt"></i> جمع کریں
+                                </button>
+                                <button type="reset" class="btn btn-warning me-1">
+                                    <i class="ti-trash"></i> صاف کریں
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.box -->
+                </div>
+            </div>
+            <!-- /.row -->
+
+        </section>
+        <!-- /.content -->
+    </div>
+</div>
+
+{{>footer}}
+<script src="/vendor_components/formatter/formatter.js"></script>
+<script src="/vendor_components/formatter/jquery.formatter.js"></script>
+<script src="/js/pages/students.js"></script>

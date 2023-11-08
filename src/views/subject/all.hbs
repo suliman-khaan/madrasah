@@ -12,7 +12,7 @@
 		<div class="content-header">
 			<div class="d-flex align-items-center">
 				<div class="me-auto">
-					<h3 class="page-title"> طلباء علم رکارڈ</h3>
+					<h3 class="page-title">مضامین</h3>
 				</div>
 
 			</div>
@@ -29,29 +29,26 @@
 								class="table table-bordered table-hover display nowrap margin-top-10 w-p100">
 								<thead>
 									<tr>
-										<th>رول نمبر</th>
-										<th>نام</th>
-										<th>والد کا نام</th>
-										<th>کلاس</th>
-										<th>موبائل نمبر</th>
-										<th>پتہ</th>
-										<th>کارروائی</th>
+										<th width="100px">سیریل نمبر</th>
+										<th>مضمون</th>
+										<th>امتحانی نمبر</th>
+										<th>امتحانی پاس نمبر</th>
+										<th width="100px">کارروائی</th>
 									</tr>
 								</thead>
 								<tbody>
-									{{#each students}}
+									{{#each subjects}}
 									<tr>
-										<td>{{this.rollNumber}}</td>
+										<td>{{increment @index}}</td>
 										<td>{{this.name}}</td>
-										<td>{{this.fatherName}}</td>
-										<td>{{this.admission.name}}</td>
-										<td>{{this.phone}}</td>
-										<td>{{this.address}}</td>
+										<td>{{this.totalMarks}}</td>
+										<td>{{this.passingMarks}}</td>
 										<td>
 											<a class="btn btn-success px-2 py-1 me-1"
-												href="/students/edit?id={{this._id}}"><i
-													class="mdi mdi-account-edit"></i></a>
-											<button class="btn btn-danger px-2 py-1" data-id="{{this._id}}" data-bs-toggle="modal" data-bs-target="#delete"><i
+												href="/subject/edit?id={{this._id}}"><i
+													class="mdi mdi-border-color"></i></a>
+											<button class="btn btn-danger px-2 py-1" data-id="{{this._id}}"
+												data-bs-toggle="modal" data-bs-target="#delete"><i
 													class="mdi mdi-delete"></i></button>
 										</td>
 									</tr>
@@ -79,7 +76,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<p class="fs-16">کیا آپ واقعی طالب علم کو حذف کرنا چاہتے ہیں؟</p>
+				<p class="fs-16">کیا آپ واقعی مضمون کو حذف کرنا چاہتے ہیں؟</p>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-danger" data-bs-dismiss="modal">نہیں</button>
@@ -101,7 +98,7 @@
 		$("#delete").on("show.bs.modal", function (e) {
 			console.log(e.relatedTarget)
 			let id = $(e.relatedTarget).data('id')
-			$(this).find('#yes').prop('href', "/students/delete?id="+id)
+			$(this).find('#yes').prop('href', "/subject/delete?id=" + id)
 		});
 	})
 </script>

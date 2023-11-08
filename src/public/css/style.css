@@ -143,6 +143,10 @@ body {
 
 .jq-toast-wrap .jq-toast-single{
   font-family: "urdu1", sans-serif;
+  line-height: 1.5rem;
+}
+thead{
+  font-family: "urdu1", sans-serif;
 }
 /*---basic---*/
 a {
