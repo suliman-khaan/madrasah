@@ -1,28 +1,11 @@
-const Fee = require("../../model/fee");
-
 module.exports = {
-  async all(req, res) {
-    try {
-    } catch (error) {}
-  },
-  async add(req, res) {
-    try {
-    } catch (error) {}
-  },
-  async doAdd(req, res) {
-    try {
-    } catch (error) {}
-  },
-  async edit(req, res) {
-    try {
-    } catch (error) {}
-  },
-  async doEdit(req, res) {
-    try {
-    } catch (error) {}
-  },
-  async delete(req, res) {
-    try {
-    } catch (error) {}
-  },
+    async main(req, res) {
+        try {
+            // const students = await User.find({ role: "student", status: "publish" });
+            res.render("fee/index");
+        } catch (error) {
+            // req.flash("error", "صارفین دیکھتے وقت خرابی:۔ " + error.message);
+            res.redirect("/");
+        }
+    },
 };
