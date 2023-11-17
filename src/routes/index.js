@@ -10,7 +10,7 @@ const markRoutes = require("./mark");
 router.get("/", dashboard);
 router.use("/students", studentsRoutes);
 router.use("/teachers", teachersRoutes);
-router.use("/class", classRoutes);
+// router.use("/class", classRoutes);
 router.use("/fee", feeRoutes);
 router.use("/subject", subjectRoutes);
 router.use("/marks", markRoutes);

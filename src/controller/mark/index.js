@@ -7,7 +7,7 @@ const Subject = require("../../model/subject");
 module.exports = {
   async all(req, res) {
     try {
-    } catch (error) {}
+    } catch (error) { }
   },
   async add(req, res) {
     try {
