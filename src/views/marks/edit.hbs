@@ -46,7 +46,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="form-label">سیشن</label>
-                                            <select class="form-select" id="session" required>
+                                            <select class="form-select" id="session" name="session" required>
                                                 {{#each session}}
                                                 <option value="{{this}}">{{this}}</option>
                                                 {{/each}}
@@ -56,7 +56,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="form-label">امتحانات</label>
-                                            <select class="form-select" id="term" required>
+                                            <select class="form-select" name="term" id="term" required>
                                                 <option value="چار ماہہ">چار ماہہ</option>
                                                 <option value="شیش  ماہہ">شیش ماہہ</option>
                                                 <option value="سالانہ">سالانہ</option>
@@ -71,22 +71,12 @@
 
                                     </div>
                                 </div>
-                                <div class="row">
-                                    {{#each student.marks}}
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">{{this.subject.name}}</label>
-                                            <input type="number" min="0" max="{{this.subject.totalMarks}}"
-                                                name="marksObtained[{{this.subject.id}}]" value="{{this.marksObtained}}"
-                                                class="form-control" required>
-                                        </div>
-                                    </div>
-                                    {{/each}}
+                                <div class="row" id="result">
                                 </div>
                             </div>
                             <!-- /.box-body -->
                             <div class="box-footer">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary" disabled>
                                     <i class="ti-save-alt"></i> ترمیم کریں
                                 </button>
                                 <button type="reset" class="btn btn-warning me-1">
@@ -111,27 +101,74 @@
 <script src="/js/pages/students.js"></script>
 <script>
     $(document).ready(function () {
-        let formData = new FormData();
-        formData.append('student', $('#studentId').val())
-        formData.append('session', $('#session').val())
-        formData.append('term', $('#term').val())
 
         let filterSubmit = $('#filter-submit');
         filterSubmit.on('click', () => {
+        const studentId = $('#studentId').val()
+        const session = $('#session').val()
+        const term = $('#term').val()
             $.ajax({
                 url: '/marks/student-marks',
                 method: 'POST',
                 dataType: 'json',
-                contentType: false,
+                contentType: 'application/json',
                 processData: false,
-                data: formData,
-                success: (data) => {
-                    console.log(data)
+                data: JSON.stringify({ studentId, session, term }),
+                success: ({ body }) => {
+                    let marks = body;
+                    //empty the result for adding the marks elements
+                    $('#result').empty()
+                    console.log(marks)
+                    if (marks.length>0) {
+                        $('button[type=submit]').attr("disabled", false);
+                        marks.forEach(mark => {
+                            let element = createInputElement(mark);
+                            $('#result').append(element);
+                        })
+                    }else{
+                        $('button[type=submit]').attr("disabled", true);
+                        $('#result').html(`<h4 class="text-center text-danger py-2">کوئی نمبر نہیں ملے!</h4>`);
+                    }
                 },
                 error: (err) => {
                     console.error(err);
+                    alert(err?.message)
                 }
             })
         })
     })
+    function createInputElement(data) {
+        let subject = data.subject;
+
+        // Create a div element with class "col-md-6"
+        var divCol = document.createElement('div');
+        divCol.className = 'col-md-6';
+
+        // Create a div element with class "form-group"
+        var divFormGroup = document.createElement('div');
+        divFormGroup.className = 'form-group';
+
+        // Create a label element with class "form-label" and text content "Name"
+        var labelName = document.createElement('label');
+        labelName.className = 'form-label';
+        labelName.textContent = subject.name;
+
+        // Create an input element with type "number", min="0", class "form-control", and required attribute
+        var inputName = document.createElement('input');
+        inputName.type = 'number';
+        inputName.min = '0';
+        inputName.max = subject.totalMarks;
+        inputName.name = `marksObtained[${subject._id}]`
+        inputName.value = data.marksObtained;
+        inputName.className = 'form-control';
+        inputName.required = true;
+
+        // Append the label and input elements to the "form-group" div
+        divFormGroup.appendChild(labelName);
+        divFormGroup.appendChild(inputName);
+
+        // Append the "form-group" div to the "col-md-6" div
+        divCol.appendChild(divFormGroup);
+        return divCol;
+    }
 </script>
