@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.get("/", mark.all);
 router.get("/add", mark.add);
+router.get("/view/:id", mark.viewMarks);
 router.get("/add/:id", mark.addMarkStudent);
 router.post("/add/:id", mark.doAddMarkStudent);
 router.get('/edit/:id',mark.edit);

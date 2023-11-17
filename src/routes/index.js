@@ -5,6 +5,7 @@ const studentsRoutes = require("./students");
 const teachersRoutes = require("./teachers");
 const feeRoutes = require("./fee");
 const subjectRoutes = require("./subject");
+const classRoutes = require("./class");
 const markRoutes = require("./mark");
 
 router.get("/", dashboard);

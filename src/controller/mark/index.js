@@ -7,7 +7,14 @@ const Subject = require("../../model/subject");
 module.exports = {
   async all(req, res) {
     try {
-    } catch (error) {}
+      const students = await Student.find({ status: "publish" }).populate(
+        "admission"
+      );
+      res.render("marks/studentsList", { students });
+    } catch (error) {
+      req.flash("error", "طالب علم دیکھتے وقت خرابی:۔ " + error.message);
+      res.redirect("/");
+    }
   },
   async add(req, res) {
     try {
@@ -20,13 +27,47 @@ module.exports = {
       res.redirect("/");
     }
   },
+  async viewMarks(req, res) {
+    try {
+      let { id } = req.params;
+      const student = await Student.findById(id)
+        .populate("admission")
+        .populate({ path: "marks", populate: "subject" });
+
+      if (!student) {
+        req.flash("error", "طالب علم اندراج نمبرات کے لئے ID ضروری ہے");
+        return res.redirect("/marks");
+      }
+
+      if (!student.marks.length) {
+        req.flash(
+          "error",
+          "معاف کریں، اس طالب علم کے لئے اب تک کوئی نمبر دستیاب نہیں ہیں۔"
+        );
+        return res.redirect("/marks");
+      }
+      let markBySession = {};
+      student.marks.forEach((mark) => {
+        let session = mark.session;
+        if (!markBySession[session]) {
+          markBySession[session] = [];
+        }
+        markBySession[session].push(mark);
+      });
+      let marks = markBySession;
+      res.render("marks/view", { student, marks });
+    } catch (error) {
+      req.flash("error", "مارکس میں ترمیم کرتے وقت خرابی:۔ " + error.message);
+      res.redirect("/");
+    }
+  },
   async addMarkStudent(req, res) {
     try {
       let { id } = req.params;
       const student = await Student.findById(id).populate("admission");
       if (!student) {
         req.flash("error", "طالب علم اندراج نمبرات کے لئے ID ضروری ہے");
-        return res.redirect("/marks/add");
+        return res.redirect("/marks");
       }
       await student.admission.populate("subjects");
       let session = new Array();
@@ -46,7 +87,7 @@ module.exports = {
       const { term, session, marksObtained } = req.body;
       if (!studentId) {
         req.flash("error", "طالب علم اندراج نمبرات کے لئے ID ضروری ہے");
-        return res.redirect("/marks/add");
+        return res.redirect("/marks");
       }
       const student = await Student.findById(studentId).populate("marks");
       const subjects = await Subject.find({ status: "publish" });
@@ -88,10 +129,10 @@ module.exports = {
       }
       await student.save();
       req.flash("success", message);
-      res.redirect("/marks/add");
+      res.redirect("/marks");
     } catch (error) {
       req.flash("error", "مارکس میں شامل کرتے وقت خرابی:۔ " + error.message);
-      return res.redirect("/marks/add");
+      return res.redirect("/marks");
     }
   },
   async edit(req, res) {
@@ -100,6 +141,7 @@ module.exports = {
       const student = await Student.findById(id)
         .populate("admission")
         .populate({ path: "marks", populate: "subject" });
+
       if (!student) {
         req.flash("error", "طالب علم اندراج نمبرات کے لئے ID ضروری ہے");
         return res.redirect("/marks/add");
@@ -144,8 +186,13 @@ module.exports = {
   },
   async getStudentMarks(req, res) {
     try {
-      console.log(req.body);
-      res.status(200).json({ message: req.body });
+      const { studentId, term, session } = req.body;
+      const marks = await Mark.find({
+        student: studentId,
+        term,
+        session,
+      }).populate("subject");
+      res.status(200).json({ body: marks });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
