@@ -12,7 +12,7 @@
 		<div class="content-header">
 			<div class="d-flex align-items-center">
 				<div class="me-auto">
-					<h3 class="page-title">مارکس</h3>
+					<h3 class="page-title">{{class.name}} <small>مارکس لیسٹ</small></h3>
 				</div>
 
 			</div>
@@ -31,7 +31,14 @@
 									<tr>
 										<th width="100px">رول نمبر</th>
 										<th>نام</th>
-										<th>کلاس</th>
+										<th>والد کا نام</th>
+										{{#each class.subjects}}
+										<th>{{this.name}}</th>
+										{{/each}}
+										<th>حاصل کردا نمبر</th>
+										<th>کل نمبر</th>
+										<th>فیصد</th>
+										<th>تبصرہ</th>
 										<th width="100px">کارروائی</th>
 									</tr>
 								</thead>
@@ -40,13 +47,23 @@
 									<tr>
 										<td>{{this.rollNumber}}</td>
 										<td>{{this.name}}</td>
-										<td>{{this.admission.name}}</td>
+										<td>{{this.fatherName}}</td>
+										{{#each ../class.subjects}}
+										<td>{{getMarkBySubject this._id ../this}}</td>
+										{{/each}}
+										<td>{{totalObtainedMarks this ../class._id}}</td>
+										<td>{{totalMarks ../class}}</td>
+										<td>{{percentageOfTotalMarks (totalObtainedMarks this ../class._id) (totalMarks
+											../class)}}%</td>
+										<td>{{studentRemarks percentageOfTotalMarks (totalObtainedMarks this
+											../class._id) (totalMarks ../class)}}</td>
 										<td>
 											<a class="btn btn-success px-2 py-1" href="/marks/add/{{this.id}}"><i
 													class="mdi mdi-plus"></i></a>
 											<a class="btn btn-success px-2 py-1 me-1" href="/marks/edit/{{this.id}}"><i
 													class="mdi mdi-border-color"></i></a>
-											<a class="btn btn-success px-2 py-1 me-1" href="/marks/view/{{this.id}}"><i
+											<a class="btn btn-success px-2 py-1 me-1"
+												href="/marks/view?studentId={{this.id}}&classId={{../class._id}}"><i
 													class="glyphicon glyphicon-user"></i></a>
 										</td>
 									</tr>
@@ -69,4 +86,36 @@
 {{>footer}}
 <script src="/vendor_components/datatable/datatables.min.js"></script>
 
-<script src="/js/pages/data-table.js"></script>
+<script>
+	$(function () {
+		"use strict";
+
+		$("#example").DataTable({
+			dom: "B<'dataTables_filter session w-100 ms-2'>frtip",
+			buttons: ["excel"],
+			language: {
+				sSearch: "تلاش کریں",
+				info: "_PAGES_ صفحے میں سے صفحہ _PAGE_ دکھایا جا رہا ہے",
+				infoEmpty: "کوئی ریکارڈ دستیاب نہیں ہے",
+				zeroRecords: "کوئی ریکارڈ دستیاب نہیں ہے",
+				formatNoMatches: "کوئی مماثل ریکارڈ دستیاب نہیں ہیں",
+				paginate: {
+					first: "پہلا",
+					last: "آخری",
+					next: "اگلا",
+					previous: "پچھلا",
+				},
+			},
+		});
+		let sessionEl = document.querySelector('.session');
+		
+		// adding session(year) option to the select dropdown
+		let option = `{{{session}}}`
+		sessionEl.innerHTML = '<label>سال<select class="form-select me-1 py-1 d-inline" style="border-color:#ccc;">'+option+'</select></label>'
+
+		sessionEl.addEventListener('change',(e)=>{
+			document.location.href = `?session=${e.target.value}`
+		})
+	});
+
+</script>

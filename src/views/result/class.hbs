@@ -1,0 +1,75 @@
+{{>header}}
+
+
+{{>navbar}}
+
+{{>sidebar}}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+	<div class="container-full">
+		<!-- Content Header (Page header) -->
+		<div class="content-header">
+			<div class="d-flex align-items-center">
+				<div class="me-auto">
+					<h3 class="page-title">{{classDetails.name}}</h3>
+				</div>
+
+			</div>
+		</div>
+
+		<!-- Main content -->
+		<section class="content">
+			<div class="row">
+				<div class="box">
+					<!-- /.box-header -->
+					<div class="box-body">
+						<div class="table-responsive">
+							<table id="example"
+								class="table table-bordered table-hover display nowrap margin-top-10 w-p100">
+								<thead>
+									<tr>
+										<th width="100px">رول نمبر</th>
+										<th>نام</th>
+										<th>والد کا نام</th>
+										{{#each classDetails.subjects}}
+										<th>{{this.name}}</th>
+										{{/each}}
+										<th width="100px">کارروائی</th>
+									</tr>
+								</thead>
+								<tbody>
+									{{#each students}}
+									<tr>
+										<td>{{this.rollNumber}}</td>
+										<td>{{this.name}}</td>
+										<td>{{this.fatherName}}</td>
+										<td>
+											<a class="btn btn-success px-2 py-1 me-1"
+												href="/subject/edit?id={{this._id}}"><i
+													class="mdi mdi-border-color"></i></a>
+											<button class="btn btn-danger px-2 py-1" data-id="{{this._id}}"
+												data-bs-toggle="modal" data-bs-target="#delete"><i
+													class="mdi mdi-delete"></i></button>
+										</td>
+									</tr>
+									{{/each}}
+								</tbody>
+							</table>
+
+						</div>
+					</div>
+					<!-- /.box-body -->
+				</div>
+			</div>
+			<!-- /.row -->
+		</section>
+		<!-- /.content -->
+	</div>
+</div>
+
+
+{{>footer}}
+<script src="/vendor_components/datatable/datatables.min.js"></script>
+
+<script src="/js/pages/data-table.js"></script>

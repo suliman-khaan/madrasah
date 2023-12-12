@@ -43,7 +43,7 @@
                                 </div>
                                 <hr>
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="form-label">سیشن</label>
                                             <select class="form-select" id="session" name="session" required>
@@ -53,7 +53,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="form-label">امتحانات</label>
                                             <select class="form-select" name="term" id="term" required>
@@ -63,7 +63,17 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 mt-auto">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">کلاس</label>
+                                            <select class="form-select" id="class" name="class" required>
+                                                {{#each classes}}
+                                                <option value="{{this._id}}">{{this.name}}</option>
+                                                {{/each}}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mt-auto">
                                         <div class="form-group">
                                             <a href="#" id="filter-submit" class="btn btn-primary btn-sm">تلاش
                                                 کریں</a>
@@ -107,13 +117,14 @@
         const studentId = $('#studentId').val()
         const session = $('#session').val()
         const term = $('#term').val()
+        const classId = $('#class').val()
             $.ajax({
                 url: '/marks/student-marks',
                 method: 'POST',
                 dataType: 'json',
                 contentType: 'application/json',
                 processData: false,
-                data: JSON.stringify({ studentId, session, term }),
+                data: JSON.stringify({ studentId, session, term, classId }),
                 success: ({ body }) => {
                     let marks = body;
                     //empty the result for adding the marks elements

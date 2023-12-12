@@ -140,6 +140,15 @@ body {
 .eng{
   font-family: "IBM Plex Sans", sans-serif;
 }
+.font-arial{
+  font-family: "Arial", sans-serif;
+}
+.font-nastaleeq{
+  font-family: "nastaleeq", sans-serif;
+}
+.urdu{
+  font-family: "urdu1", sans-serif;
+}
 
 .jq-toast-wrap .jq-toast-single{
   font-family: "urdu1", sans-serif;

@@ -3,6 +3,7 @@ const { startYear } = require("../../config/system");
 const Mark = require("../../model/mark");
 const Student = require("../../model/student");
 const Subject = require("../../model/subject");
+const ClassModel = require("../../model/class");
 
 module.exports = {
   async all(req, res) {
@@ -12,7 +13,85 @@ module.exports = {
       );
       res.render("marks/studentsList", { students });
     } catch (error) {
+      req.flash("error", "مارکس دیکھتے وقت خرابی:۔ " + error.message);
+      res.redirect("/");
+    }
+  },
+  async byClasses(req, res) {
+    try {
+      const classes = await Student.aggregate([
+        {
+          $group: {
+            _id: "$admission",
+            studentCount: { $sum: 1 },
+          },
+        },
+        {
+          $lookup: {
+            from: "classes", // The name of the classes collection
+            localField: "_id",
+            foreignField: "_id",
+            as: "class",
+          },
+        },
+        {
+          $unwind: "$class",
+        },
+        {
+          $project: {
+            name: "$class.name", // Include class name in the result
+            studentCount: 1,
+          },
+        },
+      ]);
+      res.render("marks/classList", { classes });
+    } catch (error) {
       req.flash("error", "طالب علم دیکھتے وقت خرابی:۔ " + error.message);
+      res.redirect("/");
+    }
+  },
+  async classById(req, res) {
+    try {
+      const classId = req.params.id;
+      let { session: currentSession } = req.query;
+      const currentYear = new Date().getFullYear();
+
+      // Find all marks with the specified session
+      let marksBySession = await Mark.find({
+        session: currentSession ?? currentYear,
+      });
+
+      // Extract student IDs from the marks
+      const studentIds = marksBySession.map((mark) => mark.student);
+
+      // Promise to retrieve all students based on provided studentIds and classId
+      const studentsPromise = Student.find({
+        _id: { $in: studentIds },
+        admission: classId,
+        status: "publish",
+      }).populate("admission marks");
+
+      const classPromise = ClassModel.findById(classId).populate("subjects");
+      const sessionPromise = Mark.distinct("session", { class: classId });
+      const [students, classData, uniqueSession] = await Promise.all([
+        studentsPromise,
+        classPromise,
+        sessionPromise,
+      ]);
+
+      // Sort uniqueSession array in descending order based on the session values
+      // and create HTML option elements for a select field used on the frontend
+      let sessionOption = uniqueSession
+        .sort((a, b) => b - a)
+        .map((el) => `<option value="${el}">${el}</option>`);
+
+      res.render("marks/studentsList", {
+        students,
+        class: classData,
+        session: sessionOption,
+      });
+    } catch (error) {
+      req.flash("error", "کلاس طالب علم دیکھتے وقت خرابی:۔ " + error.message);
       res.redirect("/");
     }
   },
@@ -27,36 +106,61 @@ module.exports = {
       res.redirect("/");
     }
   },
+  // Student mark result card
   async viewMarks(req, res) {
     try {
-      let { id } = req.params;
-      const student = await Student.findById(id)
-        .populate("admission")
-        .populate({ path: "marks", populate: "subject" });
+      let { studentId, session, classId } = req.query;
+      let backUrl = req.headers.referer || "/marks";
 
-      if (!student) {
-        req.flash("error", "طالب علم اندراج نمبرات کے لئے ID ضروری ہے");
-        return res.redirect("/marks");
-      }
-
-      if (!student.marks.length) {
+      if (!studentId) {
         req.flash(
           "error",
-          "معاف کریں، اس طالب علم کے لئے اب تک کوئی نمبر دستیاب نہیں ہیں۔"
+          "طالب علم نمبرات دیکھنے کے لئے طالب علم کے ID ضروری ہے"
         );
         return res.redirect("/marks");
       }
-      let markBySession = {};
-      student.marks.forEach((mark) => {
-        let session = mark.session;
-        if (!markBySession[session]) {
-          markBySession[session] = [];
-        }
-        markBySession[session].push(mark);
-      });
-      let marks = markBySession;
-      res.render("marks/view", { student, marks });
+
+      const studentPromise = Student.findById(studentId)
+        .populate("admission")
+        .populate({ path: "marks", populate: "subject" });
+      const classPromise = ClassModel.findById(classId).populate("subjects");
+
+      const [classData, student] = await Promise.all([
+        classPromise,
+        studentPromise,
+      ]);
+
+      if (!classData) {
+        req.flash("error", "معاف کریں،اس ID پر کوئی کلاس دستیاب نہیں ہیں۔");
+        return res.redirect(backUrl);
+      }
+
+      // extract the current class(classId) marks only
+      student.marks = student.marks.filter(
+        (mark) => mark?.class?.toString() == classId
+      );
+
+      // Student total obtained marks
+      let totalObtMarks = student.marks.reduce(
+        (total, subject) => total + subject.marksObtained,
+        0
+      );
+      student["obtMarks"] = totalObtMarks;
+
+      // current class total subject marks
+      let totalMarks = classData.subjects.reduce(
+        (total, subject) => total + subject.totalMarks,
+        0
+      );
+      student["totalMarks"] = totalMarks;
+
+      // student percentage
+      let percentage = ((totalObtMarks / totalMarks) * 100).toFixed(2);
+      student["percentage"] = isNaN(percentage) ? 0 : percentage;
+
+      res.render("marks/view", { student, classData });
     } catch (error) {
+      console.log(error);
       req.flash("error", "مارکس میں ترمیم کرتے وقت خرابی:۔ " + error.message);
       res.redirect("/");
     }
@@ -84,7 +188,7 @@ module.exports = {
   async doAddMarkStudent(req, res) {
     try {
       const studentId = req.params.id;
-      const { term, session, marksObtained } = req.body;
+      const { term, session, currentClass, marksObtained } = req.body;
       if (!studentId) {
         req.flash("error", "طالب علم اندراج نمبرات کے لئے ID ضروری ہے");
         return res.redirect("/marks");
@@ -103,7 +207,8 @@ module.exports = {
             (mark) =>
               mark.subject?.toString() === subject._id?.toString() &&
               mark.term === term &&
-              mark.session === session
+              mark.session === session &&
+              mark.class === currentClass
           );
 
           if (existingMark) {
@@ -117,6 +222,7 @@ module.exports = {
             const mark = new Mark({
               student: studentId,
               subject: subject._id,
+              class: currentClass,
               term,
               session,
               marksObtained: marksForSubject,
@@ -155,7 +261,7 @@ module.exports = {
         return res.redirect("/marks/add/" + id);
       }
 
-      let test = await Student.aggregate([
+      let currentStudent = await Student.aggregate([
         { $match: { _id: new mongoose.Types.ObjectId(id) } },
         {
           $lookup: {
@@ -169,16 +275,27 @@ module.exports = {
           $unwind: "$marks",
         },
         {
+          $lookup: {
+            from: "classes", // Assuming there's a 'classes' collection
+            localField: "marks.class",
+            foreignField: "_id",
+            as: "classInfo",
+          },
+        },
+        {
           $group: {
             _id: "$_id",
             name: { $first: "$name" },
             marks: { $push: "$marks" },
-            session: { $addToSet: "$marks.session" }, // Get unique sessions
+            session: { $addToSet: "$marks.session" },
+            classes: { $addToSet: { $first: "$classInfo" } }, // Get unique classes
           },
         },
       ]);
-      let session = Array.from(new Set(test[0].session.flat()));
-      res.render("marks/edit", { student, session });
+      let session = Array.from(new Set(currentStudent[0].session.flat()));
+      let classes = Array.from(new Set(currentStudent[0].classes.flat()));
+
+      res.render("marks/edit", { student, session, classes });
     } catch (error) {
       req.flash("error", "مارکس میں ترمیم کرتے وقت خرابی:۔ " + error.message);
       res.redirect("/");
@@ -186,10 +303,11 @@ module.exports = {
   },
   async getStudentMarks(req, res) {
     try {
-      const { studentId, term, session } = req.body;
+      const { studentId, term, session, classId } = req.body;
       const marks = await Mark.find({
         student: studentId,
         term,
+        class: classId,
         session,
       }).populate("subject");
       res.status(200).json({ body: marks });

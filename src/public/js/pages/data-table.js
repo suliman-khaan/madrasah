@@ -5,7 +5,7 @@
 
 $(function () {
   "use strict";
-
+  
   $("#example").DataTable({
     dom: "Bfrtip",
     buttons: ["excel"],

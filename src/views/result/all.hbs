@@ -1,0 +1,47 @@
+{{>header}}
+
+
+{{>navbar}}
+
+{{>sidebar}}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+	<div class="container-full">
+		<!-- Content Header (Page header) -->
+		<div class="content-header">
+			<div class="d-flex align-items-center">
+				<div class="me-auto">
+					<h3 class="page-title">نتائج</h3>
+				</div>
+
+			</div>
+		</div>
+
+		<!-- Main content -->
+		<section class="content">
+			<div class="row">
+				{{#each classes}}
+				<div class="col-md-6 col-12">
+					<a href="/results/class?id={{this._id}}" class="box">
+						<div class="box-body my-25">
+							<h4 class="box-title">{{this.name}}</h4>
+							<p>
+								<span> {{this.studentCount}}طلباء علم</span>
+							</p>
+						</div>
+					</a>
+				</div>
+				{{/each}}
+			</div>
+			<!-- /.row -->
+		</section>
+		<!-- /.content -->
+	</div>
+</div>
+
+
+{{>footer}}
+<script src="/vendor_components/datatable/datatables.min.js"></script>
+
+<script src="/js/pages/data-table.js"></script>
