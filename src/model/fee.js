@@ -6,6 +6,7 @@ const feeRecordSchema = new mongoose.Schema({
   year: Number,
   amountPaid: Number,
   discount: Number,
+  type: String,
   status: String, // 'Pending', 'Paid', 'Discounted', etc.
 });
 

@@ -1,4 +1,5 @@
 const ClassModel = require("../../model/class");
+const Student = require("../../model/student");
 
 module.exports = {
     async main(req, res) {
@@ -27,12 +28,24 @@ module.exports = {
                     }
                 }
             ]);
-
-            console.log(classes);
-            res.render("fee/index", { classes });
+            return res.render("fee/index", { classes });
         } catch (error) {
-            // req.flash("error", "صارفین دیکھتے وقت خرابی:۔ " + error.message);
-            res.redirect("/");
+            req.flash("error", "صارفین دیکھتے وقت خرابی:۔ " + error.message);
+            return res.redirect("/");
         }
     },
+    async class(req, res) {
+        try {
+            console.log(req.params.id);
+            const admission = req.params.id;
+            const students = await Student.find({ admission }).populate('admission');
+            console.log(students);
+            return res.render('fee/allStudents', {
+                students
+            });
+        } catch (err) {
+            req.flash("error", "صارفین دیکھتے وقت خرابی:۔" + err.message);
+            return res.redirect("/");
+        }
+    }
 };
