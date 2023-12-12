@@ -3,8 +3,8 @@ const ClassModel = require("../../model/class");
 module.exports = {
     async main(req, res) {
         try {
-            const classes = await ClassModel.find().select('name');
-            const classesWithStudents = await ClassModel.aggregate([
+            // const classes = await ClassModel.find().select('name');
+            const classes = await ClassModel.aggregate([
                 {
                     $match: {} // Match all classes or add any specific conditions here
                 },
@@ -21,14 +21,14 @@ module.exports = {
                         totalStudents: { $size: '$students' } // Count the number of students in each class
                     }
                 },
-                // {
-                //     $project: {
-                //         students: 0 // Exclude the 'students' array from the final result if not needed
-                //     }
-                // }
+                {
+                    $project: {
+                        students: 0 // Exclude the 'students' array from the final result if not needed
+                    }
+                }
             ]);
 
-            console.log(classesWithStudents);
+            console.log(classes);
             res.render("fee/index", { classes });
         } catch (error) {
             // req.flash("error", "صارفین دیکھتے وقت خرابی:۔ " + error.message);
