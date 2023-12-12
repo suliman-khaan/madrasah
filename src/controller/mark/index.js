@@ -13,7 +13,7 @@ module.exports = {
       );
       res.render("marks/studentsList", { students });
     } catch (error) {
-      req.flash("error", "طالب علم دیکھتے وقت خرابی:۔ " + error.message);
+      req.flash("error", "مارکس دیکھتے وقت خرابی:۔ " + error.message);
       res.redirect("/");
     }
   },
@@ -53,22 +53,42 @@ module.exports = {
   async classById(req, res) {
     try {
       const classId = req.params.id;
+      let { session: currentSession } = req.query;
+      const currentYear = new Date().getFullYear();
+
+      // Find all marks with the specified session
+      let marksBySession = await Mark.find({
+        session: currentSession ?? currentYear,
+      });
+
+      // Extract student IDs from the marks
+      const studentIds = marksBySession.map((mark) => mark.student);
+
+      // Promise to retrieve all students based on provided studentIds and classId
       const studentsPromise = Student.find({
+        _id: { $in: studentIds },
         admission: classId,
         status: "publish",
-      })
-        .populate("admission")
-        .populate("marks");
+      }).populate("admission marks");
 
       const classPromise = ClassModel.findById(classId).populate("subjects");
-      const [students, classData] = await Promise.all([
+      const sessionPromise = Mark.distinct("session", { class: classId });
+      const [students, classData, uniqueSession] = await Promise.all([
         studentsPromise,
         classPromise,
+        sessionPromise,
       ]);
+
+      // Sort uniqueSession array in descending order based on the session values
+      // and create HTML option elements for a select field used on the frontend
+      let sessionOption = uniqueSession
+        .sort((a, b) => b - a)
+        .map((el) => `<option value="${el}">${el}</option>`);
 
       res.render("marks/studentsList", {
         students,
         class: classData,
+        session: sessionOption,
       });
     } catch (error) {
       req.flash("error", "کلاس طالب علم دیکھتے وقت خرابی:۔ " + error.message);
@@ -86,6 +106,7 @@ module.exports = {
       res.redirect("/");
     }
   },
+  // Student mark result card
   async viewMarks(req, res) {
     try {
       let { studentId, session, classId } = req.query;
@@ -135,9 +156,9 @@ module.exports = {
 
       // student percentage
       let percentage = ((totalObtMarks / totalMarks) * 100).toFixed(2);
-      student["percentage"] = isNaN(percentage)?0:percentage;
+      student["percentage"] = isNaN(percentage) ? 0 : percentage;
 
-      res.render("marks/view", { student,classData });
+      res.render("marks/view", { student, classData });
     } catch (error) {
       console.log(error);
       req.flash("error", "مارکس میں ترمیم کرتے وقت خرابی:۔ " + error.message);
