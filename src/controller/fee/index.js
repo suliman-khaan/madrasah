@@ -47,5 +47,25 @@ module.exports = {
             req.flash("error", "صارفین دیکھتے وقت خرابی:۔" + err.message);
             return res.redirect("/");
         }
-    }
+    },
+    // fee portal
+    async portal(req, res) {
+        try {
+            const classes = await ClassModel.find().select('name');
+            return res.render('fee/feePortal', { classes });
+        } catch (err) {
+            req.flash("error", " : fee/portal صارفین دیکھتے وقت خرابی:۔" + err.message);
+            return res.redirect("/");
+        }
+    },
+    // edit class portal 
+    async portalClass(req, res) {
+        try {
+            const admission = req.params.id;
+            return res.render('fee/feePortalSingleClass');
+        } catch (err) {
+            req.flash("error", " : fee/portal/class/ صارفین دیکھتے وقت خرابی:۔" + err.message);
+            return res.redirect("/");
+        }
+    },
 };
