@@ -9,5 +9,9 @@ router.get("/class/:id", fee.class);
 // for fee portal
 router.get("/portal", fee.portal);
 router.get("/portal/class/:id", fee.portalClass);
+// add fee form
+router.post('/addfee', fee.addfee);
+// find fee
+router.get('/portal/:id', fee.findFee);
 
 module.exports = router;

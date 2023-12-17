@@ -1,4 +1,5 @@
 const ClassModel = require("../../model/class");
+const Fee = require("../../model/fee");
 const Student = require("../../model/student");
 
 module.exports = {
@@ -36,10 +37,8 @@ module.exports = {
     },
     async class(req, res) {
         try {
-            console.log(req.params.id);
             const admission = req.params.id;
             const students = await Student.find({ admission }).populate('admission');
-            console.log(students);
             return res.render('fee/allStudents', {
                 students
             });
@@ -58,14 +57,57 @@ module.exports = {
             return res.redirect("/");
         }
     },
-    // edit class portal 
+    // edit class portal single fee portal class
     async portalClass(req, res) {
         try {
             const admission = req.params.id;
-            return res.render('fee/feePortalSingleClass');
+            const { fee } = await ClassModel.findById(admission).select('fee').populate('fee');
+            return res.render('fee/feePortalSingleClass', { id: admission, fees: fee });
         } catch (err) {
             req.flash("error", " : fee/portal/class/ صارفین دیکھتے وقت خرابی:۔" + err.message);
             return res.redirect("/");
         }
     },
+    // additon of fee
+    async addfee(req, res) {
+        try {
+            const fee = req.body;
+            const feeModal = await Fee({ ...fee }).save().then(async (savedDoc) => {
+                // fee.class is an ID of the class obtained from req.body...
+                const classmodal = await ClassModel.findById(fee.class);
+                const isIdPresent = classmodal.fee.some(feeId => feeId.equals(savedDoc._id));
+                if (classmodal) {
+                    if (!isIdPresent) {
+                        classmodal.fee.push(savedDoc._id); // Pushing the savedDoc._id into the fee array
+                        await classmodal.save();
+                    } else {
+                        throw new Error('Id Already Present there');
+                    }
+                } else {
+                    throw new Error('Class not found')
+                    // Handle the scenario where the class is not found
+                }
+                return savedDoc;
+            });
+
+            return res.redirect(`/fee/portal/class/${fee.class}`);
+
+            // if want to use an ajax...
+        } catch (err) {
+            req.flash("error", " : addFee/ صارفین دیکھتے وقت خرابی:۔" + err.message);
+            return res.redirect("/");
+        }
+    },
+    // find fee
+    async findFee(req, res) {
+        try {
+            const feeId = req.params.id;
+            let fee = await Fee.findById(feeId);
+            console.log(fee);
+            return fee;
+        } catch (err) {
+            req.flash("error", " : findFee/ صارفین دیکھتے وقت خرابی:۔" + err.message);
+            return res.redirect("/");
+        }
+    }
 };

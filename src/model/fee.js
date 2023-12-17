@@ -2,12 +2,18 @@ const mongoose = require('mongoose');
 
 const feeRecordSchema = new mongoose.Schema({
   studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Reference to the student
-  month: String,
-  year: Number,
-  amountPaid: Number,
+  date: { type: Date, default: Date.now },
+  amount: String,
   discount: Number,
-  type: String,
-  status: String, // 'Pending', 'Paid', 'Discounted', etc.
+  name: String,//type
+  status: {
+    type: String,
+    default: 'pending',
+    enum: ['pending', 'paid']
+  }, // 'Pending', 'Paid', 'Discounted', etc.
+}, {
+  timestamps: true
 });
 
-module.exports = mongoose.model('Fee', feeRecordSchema);
+const Fee = mongoose.model('Fee', feeRecordSchema);
+module.exports = Fee;
