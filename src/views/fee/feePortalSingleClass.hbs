@@ -32,17 +32,23 @@
                         </div>
                         <div class="row">
                             <div class="box-body col-6">
-                                <a href="#" class="btn d-grid btn-primary-light">Edit</a>
+                                <button type="button" data-id="{{this.id}}" data-bs-toggle="modal"
+                                    data-bs-target="#edit-fee-modal" alt="alert"
+                                    class="btn d-grid btn-primary-light edit-fee-modal-btn" style="width: 100%;"
+                                    href="javascript:void(0)">
+                                    Edit
+                                </button>
                             </div>
                             <div class="box-body col-6">
-                                <a href="/fee/portal/{{this.id}}" class="btn d-grid btn-primary-light">Send</a>
+                                <a href="/fee/portal/{{this.id}}" style="width: 100%;"
+                                    class="btn d-grid btn-primary-light">Send</a>
                             </div>
                         </div>
                     </div>
                 </div>
                 {{/each}}
                 <div class="col-6 col-md-3 d-flex align-items-center">
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#modal-center" alt="alert"
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#add-fee-modal" alt="alert"
                         class="box box-link-shadow text-center pull-up btn align-items-center"
                         href="javascript:void(0)">
                         <div class="box-body">
@@ -61,8 +67,8 @@
 
 
 
-{{!-- Modal --}}
-<div class="modal center-modal fade" id="modal-center" tabindex="-1" aria-hidden="true">
+{{!-- Add fee Modal --}}
+<div class="modal center-modal fade" id="add-fee-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -113,6 +119,60 @@
         </div>
     </div>
 </div>
+{{!-- Edit fee Modal --}}
+<div class="modal center-modal fade" id="edit-fee-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Modal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h4 class="box-title">طالب علم شامل کرنے کا فارم</h4>
+                    </div>
+                    <!-- /.box-header -->
+                    <form class="form-fee" id="update-form" action="/fee/updatefee">
+                        <div class="box-body">
+                            <h4 class="box-title text-info mb-0"><i class="ti-user me-15"></i> ذاتی معلومات</h4>
+                            <hr class="my-15">
+                            <input type="hidden" id="edit-form-id" value="" name="id">
+                            <div class="form-group">
+                                <label class="form-label">Type/Name</label>
+                                <input type="text" id="edit-form-name" name="name" value="" required
+                                    class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Amount</label>
+                                <input type="text" id="edit-form-amount" name="amount" value="" required
+                                    class="form-control">
+                            </div>
+                            {{!-- Date --}}
+                            {{!-- <div class="form-group row">
+                                <label for="date" class="form-label">Date</label>
+                                <input class="form-control eng" name="date" type="date" id="date">
+                            </div> --}}
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary" fdprocessedid="ecljau">
+                                <i class="ti-save-alt"></i> جمع کریں
+                            </button>
+                            <button type="reset" class="btn btn-warning me-1" fdprocessedid="lzzut">
+                                <i class="ti-trash"></i> صاف کریں
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer modal-footer-uniform">
+                <button type="button" class="btn btn-danger close-btn" data-bs-dismiss="modal">Close</button>
+                {{!-- <button type="button" class="btn btn-primary float-end">Save changes</button> --}}
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -152,9 +212,78 @@
             });
         });
     });
-</script> --}}
+</script>
+--}}
 
 <!-- Vendor JS -->
 <script src="/js/pages/chat-popup.js"></script>
 <script src="/vendor_components/sweetalert/sweetalert.min.js"></script>
 <script src="/vendor_components/sweetalert/jquery.sweet-alert.custom.js"></script>
+
+{{!-- page scripts --}}
+{{!-- // this is for open a modal --}}
+<script>
+    var activeDiv;
+    $(document).ready(function () {
+
+
+        $('.edit-fee-modal-btn').click(function () {
+            let feeId = $(this).data('id');
+            activeDiv = $(this).parents('.box')[0];
+            // AJAX request to submit form data
+
+            $.ajax({
+                type: 'get', // Get the form's method attribute
+                url: `/fee/portal/${feeId}`, // Get the form's action attribute
+                success: function (response) {
+                    const { fee } = response;
+                    console.log(fee._id)
+                    //set old id in edit modal
+                    $('#edit-fee-modal #edit-form-id').val(fee._id)
+                    //set old name in edit modal
+                    $('#edit-fee-modal #edit-form-name').val(fee.name)
+                    // set old amount in edit modal
+                    $('#edit-fee-modal #edit-form-amount').val(fee.amount)
+                    // Handle success response if needed
+                    console.log("Form submitted successfully:", response);
+                },
+                error: function (error) {
+                    // Handle error response if needed
+                    console.error("Error submitting form:", error);
+                }
+            });
+        });
+    });
+</script>
+{{!-- this is for submit edit form --}}
+<script>
+    $(document).ready(function () {
+        $('form#update-form').submit(function (e) {
+            e.preventDefault();
+            // Serialize form data
+            var formData = $(this).serialize();
+            // AJAX request to submit form data
+            $.ajax({
+                type: 'patch', // Get the form's method attribute
+                url: $(this).attr('action'), // Get the form's action attribute
+                dataType: 'json', // Specify the expected response type
+                data: formData, // Serialized form data
+                success: function (response) {
+                    // Handle success response if needed
+                    let { name, amount } = response.updateFee;
+                    let activeNameDiv = $($(activeDiv).children('.box-body')[0]).children('p.text-info')[0];
+                    let activeAmountDiv = $($(activeDiv).children('.box-body')[1]).children('h1.countnm')[0];
+                    // set new text to amount and name in the exact editable box -- fee
+                    $(activeNameDiv).text(name);
+                    $(activeAmountDiv).text(amount);
+                    //close the modal
+                    $("#edit-fee-modal .close-btn").click();
+                },
+                error: function (error) {
+                    // Handle error response if needed
+                    console.error("Error submitting form:", error);
+                }
+            });
+        });
+    });
+</script>

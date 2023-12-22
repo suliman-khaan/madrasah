@@ -11,7 +11,9 @@ router.get("/portal", fee.portal);
 router.get("/portal/class/:id", fee.portalClass);
 // add fee form
 router.post('/addfee', fee.addfee);
-// find fee
+// update fee form
+router.patch('/updatefee', fee.updatefee);
+// find fee doc attributes.
 router.get('/portal/:id', fee.findFee);
 
 module.exports = router;

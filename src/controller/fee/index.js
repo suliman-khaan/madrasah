@@ -98,13 +98,31 @@ module.exports = {
             return res.redirect("/");
         }
     },
+    // update form fee
+    async updatefee(req, res) {
+        try {
+            const { id, name, amount } = req.body;
+
+            const updateFee = await Fee.findByIdAndUpdate(id, { name, amount }, { new: true });
+            if (!updateFee) {
+                return res.status(404).send({ error: 'Fee not found' });
+            }
+
+            console.log('updated', updateFee);
+            return res.send({ updateFee });
+
+            // if want to use an ajax...
+        } catch (error) {
+            return res.send({ error });
+        }
+    },
     // find fee
     async findFee(req, res) {
         try {
             const feeId = req.params.id;
             let fee = await Fee.findById(feeId);
             console.log(fee);
-            return fee;
+            return res.send({ fee });
         } catch (err) {
             req.flash("error", " : findFee/ صارفین دیکھتے وقت خرابی:۔" + err.message);
             return res.redirect("/");
