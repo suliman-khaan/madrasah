@@ -6,5 +6,15 @@ const router = express.Router();
 router.get("/", fee.main);
 // for exploring the class
 router.get("/class/:id", fee.class);
-
+// for fee portal
+router.get("/portal", fee.portal);
+router.get("/portal/class/:id", fee.portalClass);
+// add fee form
+router.post('/addfee', fee.addFee);
+// update fee form
+router.patch('/updatefee', fee.updateFee);
+// find fee doc attributes.
+router.get('/portal/:id', fee.findFee);
+// Send fees to the students enrolled in that specific class
+router.post('/sendfee/:id', fee.sendFee);
 module.exports = router;
