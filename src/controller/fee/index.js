@@ -69,7 +69,7 @@ module.exports = {
         }
     },
     // additon of fee
-    async addfee(req, res) {
+    async addFee(req, res) {
         try {
             const fee = req.body;
             const feeModal = await Fee({ ...fee }).save().then(async (savedDoc) => {
@@ -99,7 +99,7 @@ module.exports = {
         }
     },
     // update form fee
-    async updatefee(req, res) {
+    async updateFee(req, res) {
         try {
             const { id, name, amount } = req.body;
 
@@ -126,6 +126,32 @@ module.exports = {
         } catch (err) {
             req.flash("error", " : findFee/ صارفین دیکھتے وقت خرابی:۔" + err.message);
             return res.redirect("/");
+        }
+    },
+    // send fee docs to students
+    async sendFee(req, res) {
+        try {
+            console.log('body', req.body);
+            const { admission } = req.body
+            const fee = req.params.id;
+            const data = {
+                fee,
+                status: 'pending'
+            };
+            // const students = await Student.findOneAndUpdate(
+            //     { admission })
+            // console.log(students)
+            const students = await Student.updateMany(
+                { admission },
+                { $push: { fees: data }, },
+                { new: true }
+            );
+            console.log('here', students);
+            return res.send({ students, body: req.body });
+        } catch (err) {
+            console.log('error in the last', err);
+            // req.flash("error", " : findFee/ صارفین دیکھتے وقت خرابی:۔" + err.message);
+            // return res.redirect("/");
         }
     }
 };

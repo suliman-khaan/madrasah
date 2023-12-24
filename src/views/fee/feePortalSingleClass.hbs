@@ -40,8 +40,10 @@
                                 </button>
                             </div>
                             <div class="box-body col-6">
-                                <a href="/fee/portal/{{this.id}}" style="width: 100%;"
-                                    class="btn d-grid btn-primary-light">Send</a>
+                                <button type="button" data-id="{{this.id}}"
+                                    class="btn d-grid btn-primary-light send-btn" style="width: 100%;">
+                                    Send
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -286,4 +288,41 @@
             });
         });
     });
+</script>
+
+{{!-- send btn functions -- send fees to all students --}}
+<script>
+    $(document).ready(function () {
+
+
+        $('button.send-btn').click(function () {
+            let feeId = $(this).data('id');
+            let admission = `{{{ id }}}`;
+            console.log(admission);
+            console.log(feeId);
+
+
+
+            // AJAX request to submit form data
+
+            $.ajax({
+                type: 'post', // Get the form's method attribute
+                url: `/fee/sendfee/${feeId}`, // Get the form's action attribute
+                data: JSON.stringify({ admission }), // Sending classId in the request body
+                contentType: 'application/json', // Specify content type for JSON data
+                dataType: 'json', // Specify the expected response type
+                success: function (response) {
+                    console.log("status", response);
+                    // Handle success response if needed
+                    console.log("Form submitted successfully:", response);
+                },
+                error: function (error) {
+                    // Handle error response if needed
+                    console.error("Error submitting form:", error);
+                }
+            });
+        });
+    });
+
+
 </script>

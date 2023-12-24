@@ -12,15 +12,15 @@ const studentSchema = new mongoose.Schema({
       ref: "Mark",
     },
   ],
-  fee: {
-    total: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Fee'
-    }],
-    remainingAmount: String,
-    pendingAmount: String,
-    paid: String
-  }
+  fees: [
+    {
+      fee: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Fee'
+      },
+      status: { type: String, enum: ['pending', 'completed'] }
+    }
+  ]
 });
 
 const Student = User.discriminator("student", studentSchema);

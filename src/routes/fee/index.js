@@ -10,10 +10,11 @@ router.get("/class/:id", fee.class);
 router.get("/portal", fee.portal);
 router.get("/portal/class/:id", fee.portalClass);
 // add fee form
-router.post('/addfee', fee.addfee);
+router.post('/addfee', fee.addFee);
 // update fee form
-router.patch('/updatefee', fee.updatefee);
+router.patch('/updatefee', fee.updateFee);
 // find fee doc attributes.
 router.get('/portal/:id', fee.findFee);
-
+// Send fees to the students enrolled in that specific class
+router.post('/sendfee/:id', fee.sendFee);
 module.exports = router;
